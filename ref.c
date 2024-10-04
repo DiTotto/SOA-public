@@ -948,7 +948,7 @@ int add_protected_path(const char *path)
     {
         if (strcmp(current_node->path, resolved_path) == 0)
         {
-            printk(KERN_INFO "Path already exists: %s\n", absolute_path);
+            printk(KERN_INFO "Path already exists: %s\n", resolved_path);
             spin_unlock(&monitor.lock);
             kfree(resolved_path);
             return -EEXIST;
