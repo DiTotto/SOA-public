@@ -32,6 +32,12 @@
 
 #define DEVICE_NAME "ref_monitor"
 
+// // Define the size of the log buffer
+// #define LOG_BUFFER_SIZE 1024
+
+// char log_buffer[LOG_BUFFER_SIZE];
+// int log_index = 0;
+
 static char *the_file = NULL; //in the makefile will be setted the path of the file
 module_param(the_file, charp, 0660);
 MODULE_PARM_DESC(the_file, "Path of the file in the singleFS");
@@ -419,6 +425,28 @@ bool is_protected_path(const char *dir_path)
 
     return is_protected;
 }
+
+// void log_message(const char *message) {
+//     int len = strlen(message);
+//     if (log_index + len < LOG_BUFFER_SIZE) {
+//         strcpy(&log_buffer[log_index], message);
+//         log_index += len;
+//         log_buffer[log_index++] = '\n';
+//     } else {
+//         // Overflow del buffer, gestisci come preferisci
+//     }
+// }
+
+
+// static long ref_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
+//     if (cmd == GET_LOG) {
+//         if (copy_to_user((char *)arg, log_buffer, log_index)) {
+//             return -EFAULT;
+//         }
+//         return 0;
+//     }
+//     return -EINVAL;
+// }
 
 // function to send a signal to the process that tried to access a protected path without permission
 static void send_permission_denied_signal(void)
