@@ -208,11 +208,28 @@ int main()
         }
 
         ret = write(fd, buffer, strlen(buffer));
+        // if (ret < 0)
+        // {
+        //     perror("Failed to write the message to the device");
+        //     close(fd);
+        //     return -1;
+        // }
+
         if (ret < 0)
         {
             perror("Failed to write the message to the device");
-            close(fd);
-            return -1;
+            printf("Do you want to retry? (y/n): ");
+            char retry;
+            scanf("%c", &retry);
+            if (retry == 'y' || retry == 'Y')
+            {
+                continue; // Riprova
+            }
+            else
+            {
+                close(fd);
+                return -1;
+            }
         }
     }
 
