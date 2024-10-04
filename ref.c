@@ -440,7 +440,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
     struct open_flags *flags = (struct open_flags *)(registers->dx);              // in the DX register there are the open flags
     const __user char *user_path = ((struct filename *)(registers->si))->uptr; // in the SI register there is the path of the file to be opened, in uptr there is the user space pointer to the path
     const char *kernel_path = ((struct filename *)(registers->si))->name;      // in the SI register there is the path of the file to be opened, in name there is the kernel space pointer to the path
-    char *full_path = NULL;
+    char *path = NULL;
     char *dir = NULL;
     bool file_exist = false;
 
@@ -461,8 +461,8 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
 
     if (!user_path)
     {
-        full_path = kstrdup(kernel_path, GFP_KERNEL); // copy the path to the kernel space
-        if (!full_path)
+        path = kstrdup(kernel_path, GFP_KERNEL); // copy the path to the kernel space
+        if (!path)
         {
             printk(KERN_ERR "Memory allocation for full_path failed\n\n");
             registers->ax = -ENOMEM;
@@ -471,11 +471,11 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
     }
     else
     {
-        full_path = full_path(fd, user_path); // get the full path of the file
-        if (!full_path)
+        path = full_path(fd, user_path); // get the full path of the file
+        if (!path)
         {
-            full_path = kstrdup(kernel_path, GFP_KERNEL);
-            if (!full_path)
+            path = kstrdup(kernel_path, GFP_KERNEL);
+            if (!path)
             {
                 printk(KERN_ERR "Memory allocation for full_path failed\n\n");
                 registers->ax = -ENOMEM;
@@ -485,7 +485,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
         }
     }
 
-    dir = find_directory(full_path); // find the directory of the file
+    dir = find_directory(path); // find the directory of the file
     if (!dir)
     {
         dir = get_pwd(); // get the current working directory of the process if the directory is not found
@@ -494,7 +494,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
     if (!dir)
     {
         printk(KERN_ERR "Failed to determine directory\n");
-        kfree(full_path);
+        kfree(path);
         registers->ax = -EACCES;
         return 0;
     }
@@ -507,19 +507,19 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
             printk(KERN_INFO "Access to secured path blocked: %s\n", dir);
             schedule_logging(dir);
             kfree(dir);
-            kfree(full_path);
+            kfree(path);
             registers->ax = -EACCES;
             registers->di = (unsigned long)NULL;
             send_permission_denied_signal();
             return 0;
         }
     }
-    else if (is_protected_path(full_path))
+    else if (is_protected_path(path))
     {
         printk(KERN_INFO "Access to protected path blocked: %s\n", path);
-        schedule_logging(full_path);
+        schedule_logging(path);
         kfree(dir);
-        kfree(full_path);
+        kfree(path);
         registers->ax = -EACCES;
         registers->di = (unsigned long)NULL;
         send_permission_denied_signal();
@@ -527,7 +527,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
     }
 
     kfree(dir);
-    kfree(full_path);
+    kfree(path);
 
     return 0;
 }
