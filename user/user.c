@@ -29,7 +29,8 @@ int get_choice()
     int choice;
 
     fgets(input, sizeof(input), stdin);
-    if (sscanf(input, "%d", &choice) != 1)
+    
+    if (sscanf(input, "%d", &choice) != 1) 
     {
         printf("Invalid input. Please enter a number.\n");
         return -1; // Indica un errore
@@ -67,6 +68,31 @@ void get_password(char *password, size_t size)
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     printf("\n");
 }
+
+int validate_password(const char *password) {
+    size_t len = strlen(password);
+
+    if (len < 4) { // Controllo che la password sia lunga almeno 4 caratteri
+        printf("Password too short. It must be at least 4 characters long.\n");
+        return 0;
+    }
+    
+    if (len > 100) { // Non eccedere la lunghezza massima
+        printf("Password too long. Maximum allowed is 100 characters.\n");
+        return 0;
+    }
+
+    // Controlla che contenga solo caratteri alfanumerici
+    for (size_t i = 0; i < len; i++) {
+        if (!isalnum(password[i])) {
+            printf("Password contains invalid characters. Only alphanumeric characters are allowed.\n");
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 
 int main()
 {
@@ -110,6 +136,10 @@ int main()
         // fgets(password, sizeof(password), stdin);
         // password[strcspn(password, "\n")] = 0; // remove the newline character
         get_password(password, sizeof(password));
+
+        if (!validate_password(password)) {
+            continue; // Riprova in caso di password non valida
+        }
 
         switch (choice)
         {
