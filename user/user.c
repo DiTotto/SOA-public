@@ -9,7 +9,8 @@
 
 #define DEVICE_NAME "/dev/ref_monitor"
 
-void display_menu() {
+void display_menu()
+{
     printf("Select an operation:\n");
     printf("1. Monitor ON\n");
     printf("2. Monitor OFF\n");
@@ -22,7 +23,29 @@ void display_menu() {
     printf("Enter your choice: ");
 }
 
-void get_password(char *password, size_t size) {
+int get_choice()
+{
+    char input[10];
+    int choice;
+
+    fgets(input, sizeof(input), stdin);
+    if (sscanf(input, "%d", &choice) != 1)
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return -1; // Indica un errore
+    }
+
+    if (choice < 0 || choice > 7)
+    {
+        printf("Choice out of range. Please enter a number between 0 and 7.\n");
+        return -1; // Indica un errore
+    }
+
+    return choice;
+}
+
+void get_password(char *password, size_t size)
+{
     struct termios oldt, newt;
     int ch;
     size_t i = 0;
@@ -34,7 +57,8 @@ void get_password(char *password, size_t size) {
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
     // Legge password
-    while ((ch = getchar()) != '\n' && ch != EOF && i < size - 1) {
+    while ((ch = getchar()) != '\n' && ch != EOF && i < size - 1)
+    {
         password[i++] = ch;
     }
     password[i] = '\0';
@@ -44,7 +68,8 @@ void get_password(char *password, size_t size) {
     printf("\n");
 }
 
-int main() {
+int main()
+{
     int fd, choice;
     ssize_t ret;
     char buffer[2048];
@@ -53,17 +78,31 @@ int main() {
     char parameter[100];
 
     fd = open(DEVICE_NAME, O_WRONLY);
-    if (fd < 0) {
+    if (fd < 0)
+    {
         perror("Failed to open the device");
         return -1;
     }
 
-    while (1) {
+    while (1)
+    {
         display_menu();
-        scanf("%d", &choice);
-        getchar(); // consume the newline character
+        // scanf("%d", &choice);
+        // getchar(); // consume the newline character
 
-        if (choice == 0) {
+        // if (choice == 0) {
+        //     break;
+        // }
+
+        choice = get_choice();
+
+        if (choice == -1)
+        {
+            continue; // Riprova in caso di errore
+        }
+
+        if (choice == 0)
+        {
             break;
         }
 
@@ -72,51 +111,53 @@ int main() {
         // password[strcspn(password, "\n")] = 0; // remove the newline character
         get_password(password, sizeof(password));
 
-        switch (choice) {
-            case 1:
-                snprintf(command, sizeof(command), "ON");
-                snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
-                break;
-            case 2:
-                snprintf(command, sizeof(command), "OFF");
-                snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
-                break;
-            case 3:
-                snprintf(command, sizeof(command), "REC_ON");
-                snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
-                break;
-            case 4:
-                snprintf(command, sizeof(command), "REC_OFF");
-                snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
-                break;
-            case 5:
-                snprintf(command, sizeof(command), "CHGPASS");
-                printf("Enter new password: ");
-                fgets(parameter, sizeof(parameter), stdin);
-                parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
-                snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
-                break;
-            case 6:
-                snprintf(command, sizeof(command), "INSERT");
-                printf("Enter path to insert: ");
-                fgets(parameter, sizeof(parameter), stdin);
-                parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
-                snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
-                break;
-            case 7:
-                snprintf(command, sizeof(command), "REMOVE");
-                printf("Enter path to remove: ");
-                fgets(parameter, sizeof(parameter), stdin);
-                parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
-                snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
-                break;
-            default:
-                printf("Invalid choice. Please try again.\n");
-                continue;
+        switch (choice)
+        {
+        case 1:
+            snprintf(command, sizeof(command), "ON");
+            snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            break;
+        case 2:
+            snprintf(command, sizeof(command), "OFF");
+            snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            break;
+        case 3:
+            snprintf(command, sizeof(command), "REC_ON");
+            snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            break;
+        case 4:
+            snprintf(command, sizeof(command), "REC_OFF");
+            snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            break;
+        case 5:
+            snprintf(command, sizeof(command), "CHGPASS");
+            printf("Enter new password: ");
+            fgets(parameter, sizeof(parameter), stdin);
+            parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
+            snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
+            break;
+        case 6:
+            snprintf(command, sizeof(command), "INSERT");
+            printf("Enter path to insert: ");
+            fgets(parameter, sizeof(parameter), stdin);
+            parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
+            snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
+            break;
+        case 7:
+            snprintf(command, sizeof(command), "REMOVE");
+            printf("Enter path to remove: ");
+            fgets(parameter, sizeof(parameter), stdin);
+            parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
+            snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
+            break;
+        default:
+            printf("Invalid choice. Please try again.\n");
+            continue;
         }
 
         ret = write(fd, buffer, strlen(buffer));
-        if (ret < 0) {
+        if (ret < 0)
+        {
             perror("Failed to write the message to the device");
             close(fd);
             return -1;
