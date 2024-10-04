@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <ctype.h>
 
 #define DEVICE_NAME "/dev/ref_monitor"
 
