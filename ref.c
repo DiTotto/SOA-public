@@ -971,7 +971,7 @@ int add_protected_path(const char *path)
 
     spin_unlock(&monitor.lock);
 
-    printk(KERN_INFO "Path added: %s\n", absolute_path);
+    printk(KERN_INFO "Path added: %s\n", resolved_path);
     
     return 0;
 }
@@ -1024,11 +1024,11 @@ int delete_protected_path(const char *path)
 
     if (status == 0)
     {
-        printk(KERN_INFO "Protected path successfully removed: %s\n", absolute_path);
+        printk(KERN_INFO "Protected path successfully removed: %s\n", resolved_path);
     }
     else
     {
-        printk(KERN_ERR "Failed to find and remove path: %s\n", absolute_path);
+        printk(KERN_ERR "Failed to find and remove path: %s\n", resolved_path);
     }
 
     kfree(resolved_path);
