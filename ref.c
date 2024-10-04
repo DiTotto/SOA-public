@@ -575,7 +575,7 @@ static int monitor_rmdir(struct kprobe *p, struct pt_regs *registers)
 
     if (is_protected_path(ret_pointer))
     {
-        printk(KERN_INFO "Access to secured path blocked: %s\n", ret_ptr);
+        printk(KERN_INFO "Access to secured path blocked: %s\n", ret_pointer);
         schedule_logging(ret_pointer);
         kfree(ret_pointer);
         registers->di = (unsigned long)NULL;
