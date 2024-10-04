@@ -94,6 +94,24 @@ int validate_password(const char *password) {
     return 1;
 }
 
+int validate_path(const char *path) {
+    size_t len = strlen(path);
+
+    if (len == 0) {
+        printf("Path cannot be empty.\n");
+        return 0;
+    }
+
+    if (len > 200) { // Puoi definire una lunghezza massima per il percorso
+        printf("Path too long. Maximum allowed is 200 characters.\n");
+        return 0;
+    }
+
+
+    return 1;
+}
+
+
 
 int main()
 {
@@ -172,7 +190,10 @@ int main()
             printf("Enter path to insert: ");
             fgets(parameter, sizeof(parameter), stdin);
             parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
-            snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
+            if (!validate_path(parameter))
+            {
+                continue; // Riprova in caso di percorso non valido
+            }
             break;
         case 7:
             snprintf(command, sizeof(command), "REMOVE");
