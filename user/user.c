@@ -165,18 +165,25 @@ int main()
         case 1:
             snprintf(command, sizeof(command), "ON");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            write(fd, buffer, strlen(buffer));
+            if (ret == 1){
+                printf("Monitor ON\n");
+            }
             break;
         case 2:
             snprintf(command, sizeof(command), "OFF");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            write(fd, buffer, strlen(buffer));
             break;
         case 3:
             snprintf(command, sizeof(command), "REC_ON");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            write(fd, buffer, strlen(buffer));
             break;
         case 4:
             snprintf(command, sizeof(command), "REC_OFF");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
+            write(fd, buffer, strlen(buffer));
             break;
         case 5:
             snprintf(command, sizeof(command), "CHGPASS");
@@ -184,6 +191,7 @@ int main()
             fgets(parameter, sizeof(parameter), stdin);
             parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
             snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
+            write(fd, buffer, strlen(buffer));
             break;
         case 6:
             snprintf(command, sizeof(command), "INSERT");
@@ -194,6 +202,7 @@ int main()
             {
                 continue; // Riprova in caso di percorso non valido
             }
+            write(fd, buffer, strlen(buffer));
             break;
         case 7:
             snprintf(command, sizeof(command), "REMOVE");
@@ -201,13 +210,14 @@ int main()
             fgets(parameter, sizeof(parameter), stdin);
             parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
             snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
+            write(fd, buffer, strlen(buffer));
             break;
         default:
             printf("Invalid choice. Please try again.\n");
             continue;
         }
 
-        ret = write(fd, buffer, strlen(buffer));
+        //ret = write(fd, buffer, strlen(buffer));
         // if (ret < 0)
         // {
         //     perror("Failed to write the message to the device");

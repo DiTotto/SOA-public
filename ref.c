@@ -1208,6 +1208,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
             }
             printk(KERN_INFO "Setting monitor ON\n");
             setMonitorON();
+            ret = 1;
         }
         else if (strncmp(command, "OFF", 3) == 0)
         {
