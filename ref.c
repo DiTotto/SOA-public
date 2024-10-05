@@ -1156,7 +1156,8 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
     char *command;
     char *parameter;
     char *additional_param = NULL;
-    int ret = -1;
+    //int ret = -1;
+    ssize_t ret = -1;
     unsigned char salt[SALT_LENGTH];
 
     if (is_root_uid() != 1)
