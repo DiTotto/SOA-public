@@ -213,7 +213,7 @@ int main()
             if (ret == 1){
                 printf("The password has been changed\n");
             }else if (ret == -1){
-                printf("Password incorrect. The password has not been modified\n");
+                printf("Error. See kernel message for more details. The password has not been modified\n");
             }
             break;
         case 6:
@@ -229,7 +229,7 @@ int main()
             if (ret == 1){
                 printf("The path has been inserted in the list of protected path\n");
             }else if (ret == -1){
-                printf("Password incorrect. The path has not been added\n");
+                printf("Error. See kernel message for more details. The path has not been added\n");
             }
             break;
         case 7:
@@ -242,7 +242,7 @@ int main()
             if (ret == 1){
                 printf("The path has been removed from the list of protected path\n");
             }else if (ret == -1){
-                printf("Password incorrect. The path has not been removed\n");
+                printf("Error. See kernel message for more details. The path has not been removed\n");
             }
             break;
         default:
