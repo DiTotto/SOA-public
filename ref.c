@@ -1187,6 +1187,8 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
         additional_param = strsep(&buffer, ":");
     }
 
+    printk(KERN_INFO "Command: %s\n", command);
+
     if (command && parameter)
     {
 
