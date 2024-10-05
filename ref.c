@@ -1097,6 +1097,12 @@ int changePassword(char *new_password)
     char hash[PASS_LEN + 1];
     unsigned char salt[SALT_LENGTH];
 
+    if (strlen(new_password) < 6)
+    {
+        printk(KERN_ERR "Error: Password must be at least 6 characters long\n");
+        return -1;
+    }
+
     if (monitor.mode != 2 && monitor.mode != 3)
     {
         printk(KERN_ERR "Error: REC_ON or REC_OFF required\n");
@@ -1112,7 +1118,7 @@ int changePassword(char *new_password)
     }
 
     printk(KERN_INFO "Password changed\n");
-    printk("new password without hash %s\n", new_password);
+    //printk("new password without hash %s\n", new_password);
 
     spin_lock(&monitor.lock);
     strncpy(monitor.password, hash, PASS_LEN);
