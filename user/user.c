@@ -10,17 +10,34 @@
 
 #define DEVICE_NAME "/dev/ref_monitor"
 
-void display_menu()
-{
-    printf("Select an operation:\n");
-    printf("1. Monitor ON\n");
-    printf("2. Monitor OFF\n");
-    printf("3. Monitor REC_ON\n");
-    printf("4. Monitor REC_OFF\n");
-    printf("5. Change Password\n");
-    printf("6. Insert Path\n");
-    printf("7. Remove Path\n");
-    printf("0. Exit\n");
+// void display_menu()
+// {
+//     printf("Select an operation:\n");
+//     printf("1. Monitor ON\n");
+//     printf("2. Monitor OFF\n");
+//     printf("3. Monitor REC_ON\n");
+//     printf("4. Monitor REC_OFF\n");
+//     printf("5. Change Password\n");
+//     printf("6. Insert Path\n");
+//     printf("7. Remove Path\n");
+//     printf("0. Exit\n");
+//     printf("Enter your choice: ");
+// }
+
+void display_menu() {
+    printf("\n");
+    printf("+--------------------------------+\n");
+    printf("|        \033[1;34mDEVICE CONTROL MENU\033[0m         |\n"); // Titolo in blu
+    printf("+--------------------------------+\n");
+    printf("| \033[1;32m1. Monitor ON\033[0m                    |\n"); // Opzione in verde
+    printf("| \033[1;32m2. Monitor OFF\033[0m                   |\n");
+    printf("| \033[1;32m3. Monitor REC_ON\033[0m                |\n");
+    printf("| \033[1;32m4. Monitor REC_OFF\033[0m               |\n");
+    printf("| \033[1;32m5. Change Password\033[0m               |\n");
+    printf("| \033[1;32m6. Insert Path\033[0m                   |\n");
+    printf("| \033[1;32m7. Remove Path\033[0m                   |\n");
+    printf("| \033[1;31m0. Exit\033[0m                           |\n"); // Opzione Exit in rosso
+    printf("+--------------------------------+\n");
     printf("Enter your choice: ");
 }
 
