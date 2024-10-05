@@ -27,7 +27,7 @@
 void display_menu() {
     printf("\n");
     printf("+--------------------------------+\n");
-    printf("|        \033[1;34mDEVICE CONTROL MENU\033[0m         |\n"); // Titolo in blu
+    printf("|        \033[1;34mREFERENCE MONITOR MENU\033[0m         |\n"); // Titolo in blu
     printf("+--------------------------------+\n");
     printf("| \033[1;32m1. Monitor ON\033[0m                    |\n"); // Opzione in verde
     printf("| \033[1;32m2. Monitor OFF\033[0m                   |\n");
