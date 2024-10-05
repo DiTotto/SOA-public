@@ -371,7 +371,7 @@ void schedule_logging(const char *program_path)
                 return;
             }
 
-            snprintf(log_work->log_entry, sizeof(log_work->log_entry), "%s, Program Path: %s, Hash: %s\n", info, program_path, hash_str);
+            snprintf(log_work->log_entry, sizeof(log_work->log_entry), "%s, %s, %s\n", info, program_path, hash_str);
             printk(KERN_INFO "Log entry created: %s\n", log_work->log_entry);
 
             // initialize deferred job
