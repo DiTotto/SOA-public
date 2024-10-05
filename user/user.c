@@ -90,8 +90,8 @@ void get_password(char *password, size_t size)
 int validate_password(const char *password) {
     size_t len = strlen(password);
 
-    if (len < 4) { // Controllo che la password sia lunga almeno 4 caratteri
-        printf("Password too short. It must be at least 4 characters long.\n");
+    if (len < 6) { // Controllo che la password sia lunga almeno 4 caratteri
+        printf("Password too short. It must be at least 6 characters long.\n");
         return 0;
     }
     
@@ -222,7 +222,7 @@ int main()
             break;
         case 5:
             snprintf(command, sizeof(command), "CHGPASS");
-            printf("Enter new password: ");
+            printf("Enter new password (at least 6 character): ");
             fgets(parameter, sizeof(parameter), stdin);
             parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
             snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
