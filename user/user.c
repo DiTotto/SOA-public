@@ -166,6 +166,7 @@ int main()
             snprintf(command, sizeof(command), "ON");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
             ret = write(fd, buffer, strlen(buffer));
+            printf("ret: %zd\n", ret);
             if (ret == 1){
                 printf("The monitor has been set to ON\n");
             }else if (ret == -2){
