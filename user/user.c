@@ -238,6 +238,7 @@ int main()
             printf("Enter path to insert: ");
             fgets(parameter, sizeof(parameter), stdin);
             parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
+            snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
             if (!validate_path(parameter))
             {
                 continue; // Riprova in caso di percorso non valido
