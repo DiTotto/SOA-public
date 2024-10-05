@@ -167,13 +167,18 @@ int main()
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
             ret = write(fd, buffer, strlen(buffer));
             if (ret == 1){
-                printf("Monitor is ON\n");
+                printf("The monitor has been set to ON\n");
+            }else if (ret == -2){
+                printf("Password incorrect\n");
             }
             break;
         case 2:
             snprintf(command, sizeof(command), "OFF");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
-            write(fd, buffer, strlen(buffer));
+            ret = write(fd, buffer, strlen(buffer));
+            if (ret == 1){
+                printf("The monitor has been set to OFF\n");
+            }
             break;
         case 3:
             snprintf(command, sizeof(command), "REC_ON");
