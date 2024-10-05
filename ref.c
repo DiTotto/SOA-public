@@ -1206,7 +1206,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
                 kfree(buffer);
                 ret = -2;
                 printk("ret: %d\n", ret);
-                return ret;
+                return -2;
             }
             printk(KERN_INFO "Setting monitor ON\n");
             setMonitorON();
