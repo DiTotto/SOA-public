@@ -207,7 +207,7 @@ int compute_directory_hash(const char *path, unsigned char *hash)
 {
     struct path p;
     // Structure for maintaining directory state information
-    struct kstat stat;
+    //struct kstat stat;
     struct crypto_shash *tfm;
     struct shash_desc *desc;
     //char *buf;
@@ -539,7 +539,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
             kfree(path);
             registers->ax = -EACCES;
             registers->di = (unsigned long)NULL;
-            send_permission_denied_signal();
+            //send_permission_denied_signal();
             return 0;
         }
     }
@@ -551,7 +551,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
         kfree(path);
         registers->ax = -EACCES;
         registers->di = (unsigned long)NULL;
-        send_permission_denied_signal();
+        //send_permission_denied_signal();
         return 0;
     }
 
@@ -609,7 +609,7 @@ static int monitor_rmdir(struct kprobe *p, struct pt_regs *registers)
         kfree(ret_pointer);
         registers->di = (unsigned long)NULL;
         registers->ax = -EACCES;
-        send_permission_denied_signal();
+        //send_permission_denied_signal();
         return 0;
     }
 
@@ -681,7 +681,7 @@ static int monitor_mkdirat(struct kprobe *p, struct pt_regs *registers)
         kfree(ret_pointer);
         registers->di = (unsigned long)NULL;
         registers->ax = -EACCES;
-        send_permission_denied_signal();
+        //send_permission_denied_signal();
         return 0;
     }
 
@@ -738,7 +738,7 @@ static int monitor_unlinkat(struct kprobe *p, struct pt_regs *registers)
         kfree(ret_pointer);
         registers->di = (unsigned long)NULL;
         registers->ax = -EACCES;
-        send_permission_denied_signal();
+        //send_permission_denied_signal();
         return 0;
     }
 
