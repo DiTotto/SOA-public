@@ -210,7 +210,7 @@ int compute_directory_hash(const char *path, unsigned char *hash)
     struct kstat stat;
     struct crypto_shash *tfm;
     struct shash_desc *desc;
-    //char *buf;
+    char *buf;
     int ret = 0;
 
     tfm = crypto_alloc_shash("sha256", 0, 0);
@@ -226,13 +226,13 @@ int compute_directory_hash(const char *path, unsigned char *hash)
         return -ENOMEM;
     }
 
-    // buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-    // if (!buf)
-    // {
-    //     kfree(desc);
-    //     crypto_free_shash(tfm);
-    //     return -ENOMEM;
-    // }
+    buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+    if (!buf)
+    {
+        kfree(desc);
+        crypto_free_shash(tfm);
+        return -ENOMEM;
+    }
 
     desc->tfm = tfm;
 
@@ -250,11 +250,11 @@ int compute_directory_hash(const char *path, unsigned char *hash)
     }
 
     // // Get the dir attributes
-    // ret = vfs_getattr(&p, &stat, STATX_BASIC_STATS, AT_STATX_SYNC_AS_STAT);
-    // if (ret)
-    // {
-    //     goto out_free;
-    // }
+    ret = vfs_getattr(&p, &stat, STATX_BASIC_STATS, AT_STATX_SYNC_AS_STAT);
+    if (ret)
+    {
+        goto out_free;
+    }
 
     // Check if the path is a directory
     if (!S_ISDIR(stat.mode))
@@ -265,12 +265,12 @@ int compute_directory_hash(const char *path, unsigned char *hash)
     }
 
     // Create a buffer with directory properties
-    // snprintf(buf, PAGE_SIZE, "%s%llu%llu%llu%o",
-    //          path,
-    //          (unsigned long long)stat.ino,
-    //          (unsigned long long)stat.size,
-    //          (unsigned long long)stat.ctime.tv_sec,
-    //          stat.mode);
+    snprintf(buf, PAGE_SIZE, "%s%llu%llu%llu%o",
+             path,
+             (unsigned long long)stat.ino,
+             (unsigned long long)stat.size,
+             (unsigned long long)stat.ctime.tv_sec,
+             stat.mode);
 
     //ret = crypto_shash_update(desc, buf, strlen(buf));
     ret = crypto_shash_update(desc, path, strlen(path));
@@ -283,7 +283,7 @@ int compute_directory_hash(const char *path, unsigned char *hash)
     ret = crypto_shash_final(desc, hash);
 
 out_free:
-    //kfree(buf);
+    kfree(buf);
     kfree(desc);
     crypto_free_shash(tfm);
     return ret;
@@ -1188,7 +1188,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
         additional_param = strsep(&buffer, ":");
     }
 
-    printk(KERN_INFO "Command: %s\n", command);
+    //printk(KERN_INFO "Command: %s\n", command);
 
     if (command && parameter)
     {
