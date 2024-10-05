@@ -125,7 +125,7 @@ static inline bool is_root_uid(void)
 void get_process_info(char *info, size_t len)
 {
     struct task_struct *task = current;
-    snprintf(info, len, "TGID: %d, TID: %d, UID: %d, EUID: %d", task->tgid, task->pid, __kuid_val(task_uid(task)), __kuid_val(task_euid(task)));
+    snprintf(info, len, " %d,  %d,  %d,  %d", task->tgid, task->pid, __kuid_val(task_uid(task)), __kuid_val(task_euid(task)));
 }
 
 // Function to compute the SHA-256 hash of a file
