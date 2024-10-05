@@ -1205,9 +1205,8 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
             {
                 printk(KERN_ERR "Error verifying password\n");
                 kfree(buffer);
-                ret = -2;
-                printk("ret: %zd\n", ret);
-                return -2;
+                //printk("ret: %zd\n", ret);
+                return ret;
             }
             printk(KERN_INFO "Setting monitor ON\n");
             setMonitorON();
