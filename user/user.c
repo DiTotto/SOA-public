@@ -235,7 +235,7 @@ int main()
         {
             perror("Failed to write the message to the device");
             printf("Do you want to retry? (y/n): ");
-            // char retry;
+            char retry;
             // scanf("%c", &retry);
             fgets(buffer, sizeof(buffer), stdin);
             retry = buffer[0]; // Prendi il primo carattere inserito
