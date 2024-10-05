@@ -179,17 +179,29 @@ int main()
             ret = write(fd, buffer, strlen(buffer));
             if (ret == 1){
                 printf("The monitor has been set to OFF\n");
+            }else if (ret == -1){
+                printf("Password incorrect\n");
             }
             break;
         case 3:
             snprintf(command, sizeof(command), "REC_ON");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
-            write(fd, buffer, strlen(buffer));
+            ret = write(fd, buffer, strlen(buffer));
+            if (ret == 1){
+                printf("The monitor has been set to REC_ON modality\n");
+            }else if (ret == -1){
+                printf("Password incorrect\n");
+            }
             break;
         case 4:
             snprintf(command, sizeof(command), "REC_OFF");
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
-            write(fd, buffer, strlen(buffer));
+            ret = write(fd, buffer, strlen(buffer));
+            if (ret == 1){
+                printf("The monitor has been set to REC_OFF modality\n");
+            }else if (ret == -1){
+                printf("Password incorrect\n");
+            }
             break;
         case 5:
             snprintf(command, sizeof(command), "CHGPASS");
@@ -197,7 +209,12 @@ int main()
             fgets(parameter, sizeof(parameter), stdin);
             parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
             snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
-            write(fd, buffer, strlen(buffer));
+            ret = write(fd, buffer, strlen(buffer));
+            if (ret == 1){
+                printf("The password has been changed\n");
+            }else if (ret == -1){
+                printf("Password incorrect. The password has not been modified\n");
+            }
             break;
         case 6:
             snprintf(command, sizeof(command), "INSERT");
@@ -208,7 +225,12 @@ int main()
             {
                 continue; // Riprova in caso di percorso non valido
             }
-            write(fd, buffer, strlen(buffer));
+            ret = write(fd, buffer, strlen(buffer));
+            if (ret == 1){
+                printf("The path has been inserted in the list of protected path\n");
+            }else if (ret == -1){
+                printf("Password incorrect. The path has not been added\n");
+            }
             break;
         case 7:
             snprintf(command, sizeof(command), "REMOVE");
@@ -216,7 +238,12 @@ int main()
             fgets(parameter, sizeof(parameter), stdin);
             parameter[strcspn(parameter, "\n")] = 0; // remove the newline character
             snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
-            write(fd, buffer, strlen(buffer));
+            ret  = write(fd, buffer, strlen(buffer));
+            if (ret == 1){
+                printf("The path has been removed from the list of protected path\n");
+            }else if (ret == -1){
+                printf("Password incorrect. The path has not been removed\n");
+            }
             break;
         default:
             printf("Invalid choice. Please try again.\n");

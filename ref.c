@@ -1236,6 +1236,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
             }
             printk(KERN_INFO "Setting monitor REC_ON\n");
             setMonitorREC_ON();
+            ret = 1;
         }
         else if (strncmp(command, "REC_OFF", 7) == 0)
         {
@@ -1248,6 +1249,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
             }
             printk(KERN_INFO "Setting monitor REC_OFF\n");
             setMonitorREC_OFF();
+            ret = 1;
         }
         else if (strncmp(command, "CHGPASS", 7) == 0)
         {
@@ -1273,6 +1275,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
                 printk(KERN_ERR "Missing new password\n");
                 ret = -EINVAL;
             }
+            ret = 1;
         }
         else if (strncmp(command, "INSERT", 6) == 0)
         {
@@ -1290,6 +1293,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
                 kfree(buffer);
                 return ret;
             }
+            ret = 1;
         }
         else if (strncmp(command, "REMOVE", 6) == 0)
         {
@@ -1307,6 +1311,7 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
                 kfree(buffer);
                 return ret;
             }
+            ret = 1;
         }
         else
         {
