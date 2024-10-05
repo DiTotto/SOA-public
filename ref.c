@@ -1112,6 +1112,7 @@ int changePassword(char *new_password)
     }
 
     printk(KERN_INFO "Password changed\n");
+    printk("new password without hash %s\n", new_password);
 
     spin_lock(&monitor.lock);
     strncpy(monitor.password, hash, PASS_LEN);
