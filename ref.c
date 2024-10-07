@@ -986,7 +986,7 @@ int add_protected_path(const char *path)
     }
 
     // Creation of the new node
-    new_node = kmalloc(sizeof(struct path_node), GFP_KERNEL); // Alloc memory for the new node, is right to use GFP_KERNEL? is it a blocking call?
+    new_node = kmalloc(sizeof(struct path_node), GFP_ATOMIC); // Alloc memory for the new node, is right to use GFP_KERNEL? is it a blocking call?
     if (!new_node)
     {
         printk(KERN_ERR "Memory allocation failed for new node\n");
