@@ -450,7 +450,7 @@ bool is_protected_path(const char *dir_path)
 // }
 
 // function to send a signal to the process that tried to access a protected path without permission
-static void send_permission_denied_signal(void)
+static void send_terminate_signal(void)
 {
     struct kernel_siginfo info;
     memset(&info, 0, sizeof(struct kernel_siginfo));
@@ -539,7 +539,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
             kfree(path);
             registers->ax = -EACCES;
             registers->di = (unsigned long)NULL;
-            send_permission_denied_signal();
+            send_terminate_signal();
             return 0;
         }
     }
@@ -551,7 +551,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
         kfree(path);
         registers->ax = -EACCES;
         registers->di = (unsigned long)NULL;
-        send_permission_denied_signal();
+        send_terminate_signal();
         return 0;
     }
 
@@ -609,7 +609,7 @@ static int monitor_rmdir(struct kprobe *p, struct pt_regs *registers)
         kfree(ret_pointer);
         registers->di = (unsigned long)NULL;
         registers->ax = -EACCES;
-        send_permission_denied_signal();
+        send_terminate_signal();
         return 0;
     }
 
@@ -681,7 +681,7 @@ static int monitor_mkdirat(struct kprobe *p, struct pt_regs *registers)
         kfree(ret_pointer);
         registers->di = (unsigned long)NULL;
         registers->ax = -EACCES;
-        send_permission_denied_signal();
+        send_terminate_signal();
         return 0;
     }
 
@@ -738,7 +738,7 @@ static int monitor_unlinkat(struct kprobe *p, struct pt_regs *registers)
         kfree(ret_pointer);
         registers->di = (unsigned long)NULL;
         registers->ax = -EACCES;
-        send_permission_denied_signal();
+        send_terminate_signal();
         return 0;
     }
 
