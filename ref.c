@@ -1064,32 +1064,32 @@ int delete_protected_path(const char *path)
     return status;
 }
 
-int comparePassw(char *input_password)
-{
-    int result;
-    unsigned char hash[SHA256_LENGTH];
-    unsigned char salt[SALT_LENGTH];
+// int comparePassw(char *input_password)
+// {
+//     int result;
+//     unsigned char hash[SHA256_LENGTH];
+//     unsigned char salt[SALT_LENGTH];
 
-    // Hash of the password provided with the stored salt
-    result = hash_password(input_password, salt, hash);
-    if (result != 0)
-    {
-        printk(KERN_ERR "Error hashing the input password\n");
-        return -1;
-    }
+//     // Hash of the password provided with the stored salt
+//     result = hash_password(input_password, salt, hash);
+//     if (result != 0)
+//     {
+//         printk(KERN_ERR "Error hashing the input password\n");
+//         return -1;
+//     }
 
-    // Compare the calculated hash to the stored hash using constant comparison
-    if (constant_time_compare(hash, monitor.password, SHA256_LENGTH) == 0)
-    {
-        printk(KERN_INFO "Password verification succeeded\n");
-        return 0;
-    }
-    else
-    {
-        printk(KERN_INFO "Password verification failed\n");
-        return -1;
-    }
-}
+//     // Compare the calculated hash to the stored hash using constant comparison
+//     if (constant_time_compare(hash, monitor.password, SHA256_LENGTH) == 0)
+//     {
+//         printk(KERN_INFO "Password verification succeeded\n");
+//         return 0;
+//     }
+//     else
+//     {
+//         printk(KERN_INFO "Password verification failed\n");
+//         return -1;
+//     }
+// }
 
 int changePassword(char *new_password)
 {
