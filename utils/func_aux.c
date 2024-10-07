@@ -238,8 +238,8 @@ char *get_absolute_path(const char *user_path) {
     }
 
     // Ottieni il percorso risolto usando d_path
-    resolved_path = d_path(&p, buf, PAGE_SIZE);
-    if (IS_ERR(resolved_path)) {
+    resolved_path2 = d_path(&p, buf, PAGE_SIZE);
+    if (IS_ERR(resolved_path2)) {
         printk(KERN_ERR "Failed to get absolute path\n");
         kfree(buf);
         path_put(&p);  // Rilascia la struttura path
@@ -247,17 +247,17 @@ char *get_absolute_path(const char *user_path) {
     }
 
     // Copia la stringa risolta in una nuova area di memoria
-    resolved_path = kstrdup(resolved_path, GFP_KERNEL);
+    resolved_path2 = kstrdup(resolved_path2, GFP_KERNEL);
     kfree(buf);        // Libera il buffer temporaneo
     path_put(&p);      // Rilascia la struttura path
 
-    if (!resolved_path) {
+    if (!resolved_path2) {
         printk(KERN_ERR "Failed to allocate memory for resolved_path\n");
         return NULL;
     }
 
 
-    printk(KERN_INFO "Resolved path 2: %s\n", resolved_path); 
+    printk(KERN_INFO "Resolved path 2: %s\n", resolved_path2); 
 
 
     //Is alredy absolute path
