@@ -7,6 +7,7 @@ Le specifiche in dettaglio del progetto in questione sono raggiungibili al segue
 2. [Modalità di funzionamento](#Modalità-di-funzionamento)
 3. [Comportamento](#comportamento)
 4. [Implementazione](#implementazione)
+5. [Istruzioni per l'installazione](#istruzioni-per-linstallazione)
 
 ## Descrizione
 Questo progetto consiste nello sviluppo di un modulo del kernel Linux che implementa un reference monitor per la protezione dei file a livello del kernel. Il monitor è progettato per controllare e limitare le operazioni di scrittura sui file specificati, assicurando che tali operazioni siano consentite solo in determinate condizioni.
