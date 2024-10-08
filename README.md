@@ -2,6 +2,10 @@
 
 Le specifiche in dettaglio del progetto in questione sono raggiungibili al seguente link: https://francescoquaglia.github.io/TEACHING/AOS/AA-2023-2024/PROJECTS/project-specification-2023-2024.html
 
+## Indice
+1. [Descrizione](#Descrizione)
+2. 
+
 ## Descrizione
 Questo progetto consiste nello sviluppo di un modulo del kernel Linux che implementa un reference monitor per la protezione dei file a livello del kernel. Il monitor è progettato per controllare e limitare le operazioni di scrittura sui file specificati, assicurando che tali operazioni siano consentite solo in determinate condizioni.
 
