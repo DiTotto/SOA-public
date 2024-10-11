@@ -713,19 +713,29 @@ void print_hash(const unsigned char *hash, size_t length)
 void setMonitorON()
 {
 
-    switch (monitor.mode)
-    {
-    case 0:
-        // change the monitor mode to ON in an atomic way
-        spin_lock(&monitor.lock);
-        monitor.mode = 1;
-        spin_unlock(&monitor.lock);
-
-        // enable the kprobes
+    void enable_all_kprobes(void){
         enable_kprobe(&kp_filp_open);
         enable_kprobe(&kp_rmdir);
         enable_kprobe(&kp_mkdir_at);
         enable_kprobe(&kp_unlinkat);
+    }
+
+    void update_monitor_mode(int new_mode) {
+        spin_lock(&monitor.lock);
+        monitor.mode = new_mode;
+        spin_unlock(&monitor.lock);
+    }
+
+    switch (monitor.mode)
+
+    {
+    case 0:
+        // change the monitor mode to ON in an atomic way
+        update_monitor_mode(1);
+
+        // enable the kprobes
+        enable_all_kprobes();
+
 
         printk(KERN_INFO "Monitor is now ON\n");
         break;
@@ -733,21 +743,13 @@ void setMonitorON()
         printk(KERN_INFO "Monitor is already ON\n");
         break;
     case 2:
-        spin_lock(&monitor.lock);
-        monitor.mode = 1;
-        spin_unlock(&monitor.lock);
-
-        enable_kprobe(&kp_filp_open);
-        enable_kprobe(&kp_rmdir);
-        enable_kprobe(&kp_mkdir_at);
-        enable_kprobe(&kp_unlinkat);
+        update_monitor_mode(1);
+        enable_all_kprobes();
 
         printk(KERN_INFO "Monitor is now ON\n");
         break;
     case 3:
-        spin_lock(&monitor.lock);
-        monitor.mode = 1;
-        spin_unlock(&monitor.lock);
+        update_monitor_mode(1);
 
         printk(KERN_INFO "Monitor is now ON\n");
         break;
