@@ -29,7 +29,7 @@ Il progetto prevede anche la gestione di un file gestito in deferred-work nel qu
 
 Il programma prevede inoltre una password iniziale riconfigurabile, impostata a "default".
 
-Il progetto è stato testato con la versione del kernel di Linux pari a: 5.0.15-113
+Il progetto è stato testato con la versione del kernel di Linux pari a: 5.15.0-113
 
 ### Istruzioni per l'installazione
 Dopo aver clonato il repository in questione, eseguire i seguenti comandi
