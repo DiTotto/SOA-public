@@ -206,8 +206,6 @@ out_free:
 int compute_directory_hash(const char *path, unsigned char *hash)
 {
     struct path p;
-    // Structure for maintaining directory state information
-    //struct kstat stat;
     struct crypto_shash *tfm;
     struct shash_desc *desc;
     //char *buf;
