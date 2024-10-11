@@ -761,39 +761,39 @@ void setMonitorON()
 void setMonitorOFF()
 {
 
+    void disable_all_kprobes(void){
+        disable_kprobe(&kp_filp_open);
+        disable_kprobe(&kp_rmdir);
+        disable_kprobe(&kp_mkdir_at);
+        disable_kprobe(&kp_unlinkat);
+    }
+
+    void update_monitor_mode(int new_mode) {
+        spin_lock(&monitor.lock);
+        monitor.mode = new_mode;
+        spin_unlock(&monitor.lock);
+    }
+
     switch (monitor.mode)
     {
     case 0:
         printk(KERN_INFO "Monitor is already OFF\n");
         break;
     case 1:
-        spin_lock(&monitor.lock);
-        monitor.mode = 0;
-        spin_unlock(&monitor.lock);
-
-        disable_kprobe(&kp_filp_open);
-        disable_kprobe(&kp_rmdir);
-        disable_kprobe(&kp_mkdir_at);
-        disable_kprobe(&kp_unlinkat);
+        update_monitor_mode(0);
+        disable_all_kprobes();
 
         printk(KERN_INFO "Monitor is now OFF\n");
         break;
     case 2:
-        spin_lock(&monitor.lock);
-        monitor.mode = 0;
-        spin_unlock(&monitor.lock);
+        update_monitor_mode(0);
 
         printk(KERN_INFO "Monitor is now OFF\n");
         break;
     case 3:
-        spin_lock(&monitor.lock);
-        monitor.mode = 0;
-        spin_unlock(&monitor.lock);
+        update_monitor_mode(0);
 
-        disable_kprobe(&kp_filp_open);
-        disable_kprobe(&kp_rmdir);
-        disable_kprobe(&kp_mkdir_at);
-        disable_kprobe(&kp_unlinkat);
+        disable_all_kprobes();
 
         printk(KERN_INFO "Monitor is now OFF\n");
         break;
@@ -805,38 +805,39 @@ void setMonitorOFF()
 void setMonitorREC_ON()
 {
 
-    switch (monitor.mode)
-    {
-
-    case 0:
-        spin_lock(&monitor.lock);
-        monitor.mode = 3;
-        spin_unlock(&monitor.lock);
-
+    void enable_all_kprobes (void){
         enable_kprobe(&kp_filp_open);
         enable_kprobe(&kp_rmdir);
         enable_kprobe(&kp_mkdir_at);
         enable_kprobe(&kp_unlinkat);
+    }
+
+    void update_monitor_mode(int new_mode) {
+        spin_lock(&monitor.lock);
+        monitor.mode = new_mode;
+        spin_unlock(&monitor.lock);
+    }
+
+    switch (monitor.mode)
+    {
+
+    case 0:
+        update_monitor_mode(3);
+
+        enable_all_kprobes();
 
         printk(KERN_INFO "Monitor is now REC_ON\n");
         break;
 
     case 1:
-        spin_lock(&monitor.lock);
-        monitor.mode = 3;
-        spin_unlock(&monitor.lock);
+        update_monitor_mode(3);
         printk(KERN_INFO "Monitor is now REC_ON\n");
         break;
 
     case 2:
-        spin_lock(&monitor.lock);
-        monitor.mode = 3;
-        spin_unlock(&monitor.lock);
+        update_monitor_mode(3);
 
-        enable_kprobe(&kp_filp_open);
-        enable_kprobe(&kp_rmdir);
-        enable_kprobe(&kp_mkdir_at);
-        enable_kprobe(&kp_unlinkat);
+        enable_all_kprobes();
 
         printk(KERN_INFO "Monitor is now REC_ON\n");
         break;
@@ -852,24 +853,29 @@ void setMonitorREC_ON()
 void setMonitorREC_OFF()
 {
 
-    switch (monitor.mode)
-    {
-    case 0:
-        spin_lock(&monitor.lock);
-        monitor.mode = 2;
-        spin_unlock(&monitor.lock);
-
-        printk(KERN_INFO "Monitor is now REC_OFF\n");
-        break;
-    case 1:
-        spin_lock(&monitor.lock);
-        monitor.mode = 2;
-        spin_unlock(&monitor.lock);
-
+    void disable_all_kprobes(void){
         disable_kprobe(&kp_filp_open);
         disable_kprobe(&kp_rmdir);
         disable_kprobe(&kp_mkdir_at);
         disable_kprobe(&kp_unlinkat);
+    }
+
+    void update_monitor_mode(int new_mode) {
+        spin_lock(&monitor.lock);
+        monitor.mode = new_mode;
+        spin_unlock(&monitor.lock);
+    }
+
+    switch (monitor.mode)
+    {
+    case 0:
+        update_monitor_mode(2);
+
+        printk(KERN_INFO "Monitor is now REC_OFF\n");
+        break;
+    case 1:
+        update_monitor_mode(2);
+        disable_all_kprobes();
 
         printk(KERN_INFO "Monitor is now REC_OFF\n");
         break;
@@ -877,14 +883,8 @@ void setMonitorREC_OFF()
         printk(KERN_INFO "Monitor is already REC_OFF\n");
         break;
     case 3:
-        spin_lock(&monitor.lock);
-        monitor.mode = 2;
-        spin_unlock(&monitor.lock);
-
-        disable_kprobe(&kp_filp_open);
-        disable_kprobe(&kp_rmdir);
-        disable_kprobe(&kp_mkdir_at);
-        disable_kprobe(&kp_unlinkat);
+        update_monitor_mode(2);
+        disable_all_kprobes();
 
         printk(KERN_INFO "Monitor is now REC_OFF\n");
         break;
