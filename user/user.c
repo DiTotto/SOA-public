@@ -61,13 +61,13 @@ int get_choice()
     
     if (sscanf(input, "%d", &choice) != 1) 
     {
-        printf("Invalid input. Please enter a number.\n");
+        print_info_message("Invalid input. Please enter a number.\n");
         return -1; // Indica un errore
     }
 
     if (choice < 0 || choice > 7)
     {
-        printf("Choice out of range. Please enter a number between 0 and 7.\n");
+        print_info_message("Choice out of range. Please enter a number between 0 and 7.\n");
         return -1; // Indica un errore
     }
 
@@ -102,19 +102,19 @@ int validate_password(const char *password) {
     size_t len = strlen(password);
 
     if (len < 6) { // Controllo che la password sia lunga almeno 4 caratteri
-        printf("Password too short. It must be at least 6 characters long.\n");
+        print_error_message("Password too short. It must be at least 6 characters long.\n");
         return 0;
     }
     
     if (len > 100) { // Non eccedere la lunghezza massima
-        printf("Password too long. Maximum allowed is 100 characters.\n");
+        print_error_message("Password too long. Maximum allowed is 100 characters.\n");
         return 0;
     }
 
     // Controlla che contenga solo caratteri alfanumerici
     for (size_t i = 0; i < len; i++) {
         if (!isalnum(password[i])) {
-            printf("Password contains invalid characters. Only alphanumeric characters are allowed.\n");
+            print_error_message("Password contains invalid characters. Only alphanumeric characters are allowed.\n");
             return 0;
         }
     }
@@ -126,12 +126,12 @@ int validate_path(const char *path) {
     size_t len = strlen(path);
 
     if (len == 0) {
-        printf("Path cannot be empty.\n");
+        print_error_message("Path cannot be empty.\n");
         return 0;
     }
 
     if (len > 200) { // Puoi definire una lunghezza massima per il percorso
-        printf("Path too long. Maximum allowed is 200 characters.\n");
+        print_error_message("Path too long. Maximum allowed is 200 characters.\n");
         return 0;
     }
 
