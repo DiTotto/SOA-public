@@ -1127,7 +1127,7 @@ static int execute_monitor_command(const char *command, const char *parameter, c
     {
         if (additional_param)
         {
-            ret = changePassword(additional_param);
+            ret = changePassword((char *)additional_param);
             if (ret != 0)
             {
                 printk(KERN_ERR "Error changing password\n");
