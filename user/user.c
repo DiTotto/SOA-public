@@ -294,6 +294,8 @@ int main()
         }
     }
 
+    print_info_message("Exiting from reference monitor");
+
     close(fd);
     return 0;
 }
