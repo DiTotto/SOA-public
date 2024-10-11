@@ -68,11 +68,6 @@ struct reference_monitor monitor = {
     .mode = 0,
 };
 
-// Define the kprobe structures
-static struct kprobe kp_filp_open;
-static struct kprobe kp_rmdir;
-static struct kprobe kp_mkdir_at;
-static struct kprobe kp_unlinkat;
 
 // Define the open_flags structure, which contains the flags used to open a file
 struct open_flags
@@ -83,6 +78,22 @@ struct open_flags
     int intent;    // intent (FMODE_OPENED, FMODE_CREATED, FMODE_EXCL), used to specify the intent of the open operation
 };
 // the structure is used to determine why a process is trying to open a file anf for what purpose. With this we can block the access if the file is protected
+
+
+// Workqueue for deferred logging so it doesn't block the monitor
+static struct workqueue_struct *log_wq;
+typedef struct
+{
+    struct work_struct work; // Structure for deferred work, contains the work to be done in the workqueue
+    char log_entry[512];     // log entry to be written to the log file
+} log_work_t;
+
+// Define the kprobe structures
+static struct kprobe kp_filp_open;
+static struct kprobe kp_rmdir;
+static struct kprobe kp_mkdir_at;
+static struct kprobe kp_unlinkat;
+
 
 static ssize_t ref_write(struct file *, const char *, size_t, loff_t *); // function to write to the device, used to interpret the commands sent by the user (ON, OFF, REC_ON, REC_OFF)
 static int ref_open(struct inode *, struct file *);                      // function to open the device
@@ -97,13 +108,7 @@ int changePassword(char *new_password);
 int add_protected_path(const char *path);
 int delete_protected_path(const char *path);
 
-// Workqueue for deferred logging so it doesn't block the monitor
-static struct workqueue_struct *log_wq;
-typedef struct
-{
-    struct work_struct work; // Structure for deferred work, contains the work to be done in the workqueue
-    char log_entry[512];     // log entry to be written to the log file
-} log_work_t;
+
 
 // function to check if the current user is root
 static inline bool is_root_uid(void)
@@ -435,7 +440,7 @@ static int monitor_filp_open(struct kprobe *p, struct pt_regs *registers)
 
     if (!user_path)
     {
-        path = kstrdup(kernel_path, GFP_KERNEL); // copy the path to the kernel space
+        path = kstrdup(kernel_path, GFP_KERNEL); // copy the path
         if (!path)
         {
             printk(KERN_ERR "Memory allocation for full_path failed\n\n");
