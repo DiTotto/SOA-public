@@ -297,7 +297,7 @@ void schedule_logging(const char *program_path)
     printk(KERN_INFO "Starting schedule_logging for path: %s\n", program_path);
 
     // Get path and stats
-    if (kern_path(program_path, LOOKUP_FOLLOW, &p) == 0)
+    if (kern_path(program_path, LOOKUP_FOLLOW, &p) == 0) //kern_path resolve a file_path to a struct_path
     {
         // Getting file/directory statistics
         if (vfs_getattr(&p, &stat, STATX_BASIC_STATS, AT_STATX_SYNC_AS_STAT) == 0)
@@ -341,8 +341,8 @@ void schedule_logging(const char *program_path)
             snprintf(log_work->log_entry, sizeof(log_work->log_entry), "%s, %s, %s\n", info, program_path, hash_str);
             printk(KERN_INFO "Log entry created: %s\n", log_work->log_entry);
 
-            // initialize deferred job
-            INIT_WORK(&log_work->work, log_to_file);
+            // Macro that initialize a work struct that will be done in deferred work. The work struct point to the function "log_to_file" 
+            INIT_WORK(&log_work->work, log_to_file); 
             // insert the deferred job into the workqueue
             queue_work(log_wq, &log_work->work);
         }
