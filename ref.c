@@ -1120,14 +1120,6 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
     if (command && parameter)
     {
 
-        /*
-        ret = verifyPassword(parameter, monitor.password, salt);
-        if(ret != 0) {
-            printk(KERN_ERR "Error verifying password\n");
-            kfree(buffer);
-            return ret;
-        }
-        */
         if (strncmp(command, "ON", 2) == 0)
         {
             ret = verifyPassword(parameter, monitor.password, salt);

@@ -10,19 +10,7 @@
 
 #define DEVICE_NAME "/dev/ref_monitor"
 
-// void display_menu()
-// {
-//     printf("Select an operation:\n");
-//     printf("1. Monitor ON\n");
-//     printf("2. Monitor OFF\n");
-//     printf("3. Monitor REC_ON\n");
-//     printf("4. Monitor REC_OFF\n");
-//     printf("5. Change Password\n");
-//     printf("6. Insert Path\n");
-//     printf("7. Remove Path\n");
-//     printf("0. Exit\n");
-//     printf("Enter your choice: ");
-// }
+
 
 void display_menu() {
     printf("\n");
@@ -149,12 +137,6 @@ int main()
     while (1)
     {
         display_menu();
-        // scanf("%d", &choice);
-        // getchar(); // consume the newline character
-
-        // if (choice == 0) {
-        //     break;
-        // }
 
         choice = get_choice();
 
@@ -267,14 +249,6 @@ int main()
             printf("Invalid choice. Please try again.\n");
             continue;
         }
-
-        //ret = write(fd, buffer, strlen(buffer));
-        // if (ret < 0)
-        // {
-        //     perror("Failed to write the message to the device");
-        //     close(fd);
-        //     return -1;
-        // }
 
         if (ret < 0)
         {

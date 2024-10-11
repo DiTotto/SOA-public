@@ -217,48 +217,6 @@ char *get_absolute_path(const char *user_path) {
     char *resolved_path;
     size_t len;
 
-    // struct path p;
-    // char *buf;
-    // char *resolved_path2;
-    // int ret;
-
-    // // Ottieni la struttura path usando kern_path
-    // ret = kern_path(user_path, LOOKUP_FOLLOW, &p);
-    // if (ret) {
-    //     printk(KERN_ERR "Error resolving path: %s\n", user_path);
-    //     return NULL;
-    // }
-
-    // // Alloca memoria per la stringa del percorso
-    // buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-    // if (!buf) {
-    //     printk(KERN_ERR "Memory allocation failed for buffer\n");
-    //     path_put(&p);  // Rilascia la struttura path
-    //     return NULL;
-    // }
-
-    // // Ottieni il percorso risolto usando d_path
-    // resolved_path2 = d_path(&p, buf, PAGE_SIZE);
-    // if (IS_ERR(resolved_path2)) {
-    //     printk(KERN_ERR "Failed to get absolute path\n");
-    //     kfree(buf);
-    //     path_put(&p);  // Rilascia la struttura path
-    //     return NULL;
-    // }
-
-    // // Copia la stringa risolta in una nuova area di memoria
-    // resolved_path2 = kstrdup(resolved_path2, GFP_KERNEL);
-    // kfree(buf);        // Libera il buffer temporaneo
-    // path_put(&p);      // Rilascia la struttura path
-
-    // if (!resolved_path2) {
-    //     printk(KERN_ERR "Failed to allocate memory for resolved_path\n");
-    //     return NULL;
-    // }
-
-
-    // printk(KERN_INFO "Resolved path 2: %s\n", resolved_path2); 
-
 
     //Is alredy absolute path
     if (user_path[0] == '/') {
