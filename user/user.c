@@ -30,6 +30,22 @@ void display_menu() {
     printf("Enter your choice: ");
 }
 
+void print_success_message(const char* message) {
+    printf(COLOR_GREEN "Success: %s\n" COLOR_RESET, message);
+}
+
+void print_error_message(const char* message) {
+    printf(COLOR_RED "Error: %s\n" COLOR_RESET, message);
+}
+
+void print_info_message(const char* message) {
+    printf(COLOR_YELLOW "Info: %s\n" COLOR_RESET, message);
+}
+
+void print_standard_message(const char* message) {
+    printf(COLOR_BLUE "%s\n" COLOR_RESET, message);
+}
+
 int get_choice()
 {
     char input[10];
@@ -168,9 +184,10 @@ int main()
             ret = write(fd, buffer, strlen(buffer));
             //printf("ret: %zd\n", ret);
             if (ret == 1){
-                printf("The monitor has been set to ON\n");
+                //printf("The monitor has been set to ON\n");
+                print_success_message("The monitor has been set to ON\n")
             }else if (ret == -1){
-                printf("Password incorrect\n");
+                print_error_message("Password incorrect\n");
             }
             break;
         case 2:
@@ -178,9 +195,9 @@ int main()
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
             ret = write(fd, buffer, strlen(buffer));
             if (ret == 1){
-                printf("The monitor has been set to OFF\n");
+                print_success_message("The monitor has been set to OFF\n");
             }else if (ret == -1){
-                printf("Password incorrect\n");
+                print_error_message("Password incorrect\n");
             }
             break;
         case 3:
@@ -188,9 +205,9 @@ int main()
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
             ret = write(fd, buffer, strlen(buffer));
             if (ret == 1){
-                printf("The monitor has been set to REC_ON modality\n");
+                print_success_message("The monitor has been set to REC_ON modality\n");
             }else if (ret == -1){
-                printf("Password incorrect\n");
+                print_error_message("Password incorrect\n");
             }
             break;
         case 4:
@@ -198,9 +215,9 @@ int main()
             snprintf(buffer, sizeof(buffer), "%s:%s", command, password);
             ret = write(fd, buffer, strlen(buffer));
             if (ret == 1){
-                printf("The monitor has been set to REC_OFF modality\n");
+                print_success_message("The monitor has been set to REC_OFF modality\n");
             }else if (ret == -1){
-                printf("Password incorrect\n");
+                print_error_message("Password incorrect\n");
             }
             break;
         case 5:
@@ -211,9 +228,9 @@ int main()
             snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
             ret = write(fd, buffer, strlen(buffer));
             if (ret == 1){
-                printf("The password has been changed\n");
+                print_success_message("The password has been changed\n");
             }else if (ret == -1){
-                printf("Error. See kernel message for more details. The password has not been modified\n");
+                print_error_message("Error. See kernel message for more details. The password has not been modified\n");
             }
             break;
         case 6:
@@ -228,9 +245,9 @@ int main()
             }
             ret = write(fd, buffer, strlen(buffer));
             if (ret == 1){
-                printf("The path has been inserted in the list of protected path\n");
+                print_success_message("The path has been inserted in the list of protected path\n");
             }else if (ret == -1){
-                printf("Error. See kernel message for more details. The path has not been added\n");
+                print_error_message("Error. See kernel message for more details. The path has not been added\n");
             }
             break;
         case 7:
@@ -241,20 +258,20 @@ int main()
             snprintf(buffer, sizeof(buffer), "%s:%s:%s", command, password, parameter);
             ret  = write(fd, buffer, strlen(buffer));
             if (ret == 1){
-                printf("The path has been removed from the list of protected path\n");
+                print_success_message("The path has been removed from the list of protected path\n");
             }else if (ret == -1){
-                printf("Error. See kernel message for more details. The path has not been removed\n");
+                print_error_message("Error. See kernel message for more details. The path has not been removed\n");
             }
             break;
         default:
-            printf("Invalid choice. Please try again.\n");
+            print_info_message("Invalid choice. Please try again.\n");
             continue;
         }
 
         if (ret < 0)
         {
             perror("Failed to write the message to the device");
-            printf("Do you want to retry? (y/n): ");
+            print_info_message("Do you want to retry? (y/n): ");
             char retry;
             // scanf("%c", &retry);
             fgets(buffer, sizeof(buffer), stdin);
