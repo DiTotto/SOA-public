@@ -23,10 +23,10 @@ void display_menu() {
     printf("+----------------------------------------------------+\n");
     printf("|             \033[1;34mREFERENCE MONITOR MENU\033[0m               |\n"); // Titolo in blu
     printf("+----------------------------------------------------+\n");
-    printf("| \033[1;32m1. Monitor ON\033[0m          | \033[1;32m2. Monitor OFF\033[0m          |\n");
-    printf("| \033[1;32m3. Monitor REC_ON\033[0m     | \033[1;32m4. Monitor REC_OFF\033[0m     |\n");
-    printf("| \033[1;32m5. Change Password\033[0m    | \033[1;32m6. Insert Path\033[0m        |\n");
-    printf("| \033[1;32m7. Remove Path\033[0m        | \033[1;31m0. Exit\033[0m               |\n"); // Exit in rosso
+    printf("| \033[1;32m1. Monitor ON\033[0m         | \033[1;32m2. Monitor OFF\033[0m          |\n");
+    printf("| \033[1;32m3. Monitor REC_ON\033[0m     | \033[1;32m4. Monitor REC_OFF\033[0m      |\n");
+    printf("| \033[1;32m5. Change Password\033[0m    | \033[1;32m6. Insert Path\033[0m          |\n");
+    printf("| \033[1;32m7. Remove Path\033[0m        | \033[1;31m0. Exit\033[0m                 |\n"); // Exit in rosso
     printf("+----------------------------------------------------+\n");
     printf("Enter your choice: ");
 }
