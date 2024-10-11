@@ -226,14 +226,6 @@ int compute_directory_hash(const char *path, unsigned char *hash)
         return -ENOMEM;
     }
 
-    // buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-    // if (!buf)
-    // {
-    //     kfree(desc);
-    //     crypto_free_shash(tfm);
-    //     return -ENOMEM;
-    // }
-
     desc->tfm = tfm;
 
     if (crypto_shash_init(desc))
@@ -249,30 +241,6 @@ int compute_directory_hash(const char *path, unsigned char *hash)
         goto out_free;
     }
 
-    // // Get the dir attributes
-    // ret = vfs_getattr(&p, &stat, STATX_BASIC_STATS, AT_STATX_SYNC_AS_STAT);
-    // if (ret)
-    // {
-    //     goto out_free;
-    // }
-
-    // Check if the path is a directory
-    // if (!S_ISDIR(stat.mode))
-    // {
-    //     printk(KERN_INFO "Path is not a directory: %s\n", path);
-    //     ret = -EINVAL;
-    //     goto out_free;
-    // }
-
-    // Create a buffer with directory properties
-    // snprintf(buf, PAGE_SIZE, "%s%llu%llu%llu%o",
-    //          path,
-    //          (unsigned long long)stat.ino,
-    //          (unsigned long long)stat.size,
-    //          (unsigned long long)stat.ctime.tv_sec,
-    //          stat.mode);
-
-    //ret = crypto_shash_update(desc, buf, strlen(buf));
     ret = crypto_shash_update(desc, path, strlen(path));
     if (ret)
     {
@@ -427,27 +395,6 @@ bool is_protected_path(const char *dir_path)
     return is_protected;
 }
 
-// void log_message(const char *message) {
-//     int len = strlen(message);
-//     if (log_index + len < LOG_BUFFER_SIZE) {
-//         strcpy(&log_buffer[log_index], message);
-//         log_index += len;
-//         log_buffer[log_index++] = '\n';
-//     } else {
-//         // Overflow del buffer, gestisci come preferisci
-//     }
-// }
-
-
-// static long ref_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
-//     if (cmd == GET_LOG) {
-//         if (copy_to_user((char *)arg, log_buffer, log_index)) {
-//             return -EFAULT;
-//         }
-//         return 0;
-//     }
-//     return -EINVAL;
-// }
 
 // function to send a signal to the process that tried to access a protected path without permission
 static void send_terminate_signal(void)
@@ -1063,33 +1010,6 @@ int delete_protected_path(const char *path)
     kfree(resolved_path);
     return status;
 }
-
-// int comparePassw(char *input_password)
-// {
-//     int result;
-//     unsigned char hash[SHA256_LENGTH];
-//     unsigned char salt[SALT_LENGTH];
-
-//     // Hash of the password provided with the stored salt
-//     result = hash_password(input_password, salt, hash);
-//     if (result != 0)
-//     {
-//         printk(KERN_ERR "Error hashing the input password\n");
-//         return -1;
-//     }
-
-//     // Compare the calculated hash to the stored hash using constant comparison
-//     if (constant_time_compare(hash, monitor.password, SHA256_LENGTH) == 0)
-//     {
-//         printk(KERN_INFO "Password verification succeeded\n");
-//         return 0;
-//     }
-//     else
-//     {
-//         printk(KERN_INFO "Password verification failed\n");
-//         return -1;
-//     }
-// }
 
 int changePassword(char *new_password)
 {
