@@ -1082,6 +1082,94 @@ static int ref_open(struct inode *inode, struct file *file)
     return 0;
 }
 
+static int verify_user_password(const char *parameter)
+{
+    unsigned char salt[SALT_LENGTH];
+    int ret = verifyPassword(parameter, monitor.password, salt);
+    if (ret != 0)
+    {
+        printk(KERN_ERR "Error verifying password\n");
+    }
+    return ret;
+}
+
+
+// Funzione per eseguire il comando del monitor
+static int execute_monitor_command(const char *command, const char *parameter, const char *additional_param)
+{
+    int ret = -1;
+
+    if (strncmp(command, "ON", 2) == 0)
+    {
+        printk(KERN_INFO "Setting monitor ON\n");
+        setMonitorON();
+        ret = 1;
+    }
+    else if (strncmp(command, "OFF", 3) == 0)
+    {
+        printk(KERN_INFO "Setting monitor OFF\n");
+        setMonitorOFF();
+        ret = 1;
+    }
+    else if (strncmp(command, "REC_ON", 6) == 0)
+    {
+        printk(KERN_INFO "Setting monitor REC_ON\n");
+        setMonitorREC_ON();
+        ret = 1;
+    }
+    else if (strncmp(command, "REC_OFF", 7) == 0)
+    {
+        printk(KERN_INFO "Setting monitor REC_OFF\n");
+        setMonitorREC_OFF();
+        ret = 1;
+    }
+    else if (strncmp(command, "CHGPASS", 7) == 0)
+    {
+        if (additional_param)
+        {
+            ret = changePassword(additional_param);
+            if (ret != 0)
+            {
+                printk(KERN_ERR "Error changing password\n");
+                return ret;
+            }
+            ret = 1;
+        }
+        else
+        {
+            printk(KERN_ERR "Missing new password\n");
+            ret = -EINVAL;
+        }
+    }
+    else if (strncmp(command, "INSERT", 6) == 0)
+    {
+        ret = add_protected_path(additional_param);
+        if (ret != 0)
+        {
+            printk(KERN_ERR "Error inserting path\n");
+            return ret;
+        }
+        ret = 1;
+    }
+    else if (strncmp(command, "REMOVE", 6) == 0)
+    {
+        ret = delete_protected_path(additional_param);
+        if (ret != 0)
+        {
+            printk(KERN_ERR "Error removing path\n");
+            return ret;
+        }
+        ret = 1;
+    }
+    else
+    {
+        printk(KERN_ERR "Unknown command\n");
+        ret = -EINVAL;
+    }
+
+    return ret;
+}
+
 // Function to write to the device and change the monitor mode
 static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, loff_t *off)
 {
@@ -1124,127 +1212,136 @@ static ssize_t ref_write(struct file *f, const char __user *buff, size_t len, lo
 
     if (command && parameter)
     {
+        ret = verify_user_password(parameter);
+        if (ret != 0)
+        {
+            kfree(buffer);
+            return ret;
+        }
 
-        if (strncmp(command, "ON", 2) == 0)
-        {
-            ret = verifyPassword(parameter, monitor.password, salt);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error verifying password\n");
-                kfree(buffer);
-                //printk("ret: %zd\n", ret);
-                return ret;
-            }
-            printk(KERN_INFO "Setting monitor ON\n");
-            setMonitorON();
-            ret = 1;
-        }
-        else if (strncmp(command, "OFF", 3) == 0)
-        {
-            ret = verifyPassword(parameter, monitor.password, salt);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error verifying password\n");
-                kfree(buffer);
-                return ret;
-            }
-            printk(KERN_INFO "Setting monitor OFF\n");
-            setMonitorOFF();
-            ret = 1;
-        }
-        else if (strncmp(command, "REC_ON", 6) == 0)
-        {
-            ret = verifyPassword(parameter, monitor.password, salt);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error verifying password\n");
-                kfree(buffer);
-                return ret;
-            }
-            printk(KERN_INFO "Setting monitor REC_ON\n");
-            setMonitorREC_ON();
-            ret = 1;
-        }
-        else if (strncmp(command, "REC_OFF", 7) == 0)
-        {
-            ret = verifyPassword(parameter, monitor.password, salt);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error verifying password\n");
-                kfree(buffer);
-                return ret;
-            }
-            printk(KERN_INFO "Setting monitor REC_OFF\n");
-            setMonitorREC_OFF();
-            ret = 1;
-        }
-        else if (strncmp(command, "CHGPASS", 7) == 0)
-        {
-            ret = verifyPassword(parameter, monitor.password, salt);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error verifying password\n");
-                kfree(buffer);
-                return ret;
-            }
-            if (additional_param)
-            {
-                ret = changePassword(additional_param);
-                if (ret != 0)
-                {
-                    printk(KERN_ERR "Error changing password\n");
-                    kfree(buffer);
-                    return ret;
-                }
-            }
-            else
-            {
-                printk(KERN_ERR "Missing new password\n");
-                ret = -EINVAL;
-            }
-            ret = 1;
-        }
-        else if (strncmp(command, "INSERT", 6) == 0)
-        {
-            ret = verifyPassword(parameter, monitor.password, salt);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error verifying password\n");
-                kfree(buffer);
-                return ret;
-            }
-            ret = add_protected_path(additional_param);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error inserting path\n");
-                kfree(buffer);
-                return ret;
-            }
-            ret = 1;
-        }
-        else if (strncmp(command, "REMOVE", 6) == 0)
-        {
-            ret = verifyPassword(parameter, monitor.password, salt);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error verifying password\n");
-                kfree(buffer);
-                return ret;
-            }
-            ret = delete_protected_path(additional_param);
-            if (ret != 0)
-            {
-                printk(KERN_ERR "Error removing path\n");
-                kfree(buffer);
-                return ret;
-            }
-            ret = 1;
-        }
-        else
-        {
-            printk(KERN_ERR "Unknown command\n");
-            ret = -EINVAL;
-        }
+        ret = execute_monitor_command(command, parameter, additional_param);
+
+
+    //     if (strncmp(command, "ON", 2) == 0)
+    //     {
+    //         ret = verifyPassword(parameter, monitor.password, salt);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error verifying password\n");
+    //             kfree(buffer);
+    //             //printk("ret: %zd\n", ret);
+    //             return ret;
+    //         }
+    //         printk(KERN_INFO "Setting monitor ON\n");
+    //         setMonitorON();
+    //         ret = 1;
+    //     }
+    //     else if (strncmp(command, "OFF", 3) == 0)
+    //     {
+    //         ret = verifyPassword(parameter, monitor.password, salt);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error verifying password\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         printk(KERN_INFO "Setting monitor OFF\n");
+    //         setMonitorOFF();
+    //         ret = 1;
+    //     }
+    //     else if (strncmp(command, "REC_ON", 6) == 0)
+    //     {
+    //         ret = verifyPassword(parameter, monitor.password, salt);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error verifying password\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         printk(KERN_INFO "Setting monitor REC_ON\n");
+    //         setMonitorREC_ON();
+    //         ret = 1;
+    //     }
+    //     else if (strncmp(command, "REC_OFF", 7) == 0)
+    //     {
+    //         ret = verifyPassword(parameter, monitor.password, salt);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error verifying password\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         printk(KERN_INFO "Setting monitor REC_OFF\n");
+    //         setMonitorREC_OFF();
+    //         ret = 1;
+    //     }
+    //     else if (strncmp(command, "CHGPASS", 7) == 0)
+    //     {
+    //         ret = verifyPassword(parameter, monitor.password, salt);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error verifying password\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         if (additional_param)
+    //         {
+    //             ret = changePassword(additional_param);
+    //             if (ret != 0)
+    //             {
+    //                 printk(KERN_ERR "Error changing password\n");
+    //                 kfree(buffer);
+    //                 return ret;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             printk(KERN_ERR "Missing new password\n");
+    //             ret = -EINVAL;
+    //         }
+    //         ret = 1;
+    //     }
+    //     else if (strncmp(command, "INSERT", 6) == 0)
+    //     {
+    //         ret = verifyPassword(parameter, monitor.password, salt);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error verifying password\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         ret = add_protected_path(additional_param);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error inserting path\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         ret = 1;
+    //     }
+    //     else if (strncmp(command, "REMOVE", 6) == 0)
+    //     {
+    //         ret = verifyPassword(parameter, monitor.password, salt);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error verifying password\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         ret = delete_protected_path(additional_param);
+    //         if (ret != 0)
+    //         {
+    //             printk(KERN_ERR "Error removing path\n");
+    //             kfree(buffer);
+    //             return ret;
+    //         }
+    //         ret = 1;
+    //     }
+    //     else
+    //     {
+    //         printk(KERN_ERR "Unknown command\n");
+    //         ret = -EINVAL;
+    //     }
     }
     else
     {
